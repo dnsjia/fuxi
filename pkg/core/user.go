@@ -28,30 +28,37 @@ SOFTWARE.
 package core
 
 import (
+	"context"
+
 	"github.com/go-redis/redis/v8"
 
 	"github.com/dnsjia/fuxi/cmd/app/config"
 	"github.com/dnsjia/fuxi/pkg/db"
+	"github.com/dnsjia/fuxi/pkg/db/models"
 )
 
-type CoreV1Interface interface {
-	UserGetter
+type UserGetter interface {
+	User() UserInterface
 }
 
-type fuxi struct {
-	cfg     config.Config
-	factory db.ShareDaoFactory
-	redis   *redis.Client
+type UserInterface interface {
+	GetByUserName(ctx context.Context, username string) (user *models.User, err error)
 }
 
-func New(cfg config.Config, factory db.ShareDaoFactory, r *redis.Client) CoreV1Interface {
-	return &fuxi{
-		cfg:     cfg,
-		factory: factory,
-		redis:   r,
+type user struct {
+	ComponentConfig config.Config
+	factory         db.ShareDaoFactory
+	redis           *redis.Client
+}
+
+func newUser(fx *fuxi) UserInterface {
+	return &user{
+		ComponentConfig: fx.cfg,
+		factory:         fx.factory,
+		redis:           fx.redis,
 	}
 }
 
-func (fx *fuxi) User() UserInterface {
-	return newUser(fx)
+func (u user) GetByUserName(ctx context.Context, username string) (user *models.User, err error) {
+	return u.factory.User().GetByUserName(ctx, username)
 }

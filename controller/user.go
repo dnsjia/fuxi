@@ -28,12 +28,15 @@ SOFTWARE.
 package controller
 
 import (
+	"context"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"github.com/dnsjia/fuxi/api/response"
 	"github.com/dnsjia/fuxi/api/types"
+	"github.com/dnsjia/fuxi/pkg/fuxi"
 )
 
 func Login(c *gin.Context) {
@@ -43,7 +46,13 @@ func Login(c *gin.Context) {
 		fmt.Println(err.Error())
 		return
 	}
-
-	c.JSON(200, gin.H{"data": u})
-
+	user, err := fuxi.CoreV1.User().GetByUserName(context.TODO(), u.UserName)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"err": err.Error(), "code": 1000})
+		return
+	}
+	if !user.Status {
+		c.JSON(http.StatusOK, gin.H{"err": "用户已经禁用", "code": 1000})
+		return
+	}
 }

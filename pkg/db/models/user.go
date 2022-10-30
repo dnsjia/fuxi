@@ -32,7 +32,7 @@ type User struct {
 	UserName string `gorm:"index:idx_username,unique;comment:用户名" json:"username"`
 	Password string `gorm:"type:varchar(256);comment:密码" json:"password"`
 	Name     string `gorm:"type:varchar(64);comment:姓名" json:"name"`
-	Status   int    `gorm:"type:tinyint;comment:状态" json:"status"`
+	Status   bool   `gorm:"type:tinyint;comment:状态" json:"status"`
 	Email    string `gorm:"type:varchar(128);comment:邮箱" json:"email"`
 	IsSuper  int64  `gorm:"comment:是否管理员" json:"isSuper"`
 }

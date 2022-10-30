@@ -49,6 +49,7 @@ func NewUserFactory(db *gorm.DB) UserInterface {
 	}
 }
 
-func (u *user) GetByUserName(ctx context.Context, username string) (*models.User, error) {
-	return nil, nil
+func (u *user) GetByUserName(ctx context.Context, username string) (user *models.User, err error) {
+	err = u.db.Model(&models.User{}).Where("username = ?", username).First(user).Error
+	return user, err
 }
