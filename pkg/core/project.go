@@ -25,34 +25,40 @@ SOFTWARE.
 
 */
 
-package db
+package core
 
-import "gorm.io/gorm"
+import (
+	"context"
 
-type ShareDaoFactory interface {
-	User() UserInterface
+	"github.com/go-redis/redis/v8"
+
+	"github.com/dnsjia/fuxi/cmd/app/config"
+	"github.com/dnsjia/fuxi/pkg/db"
+	"github.com/dnsjia/fuxi/pkg/db/models"
+)
+
+type ProjectGetter interface {
 	Project() ProjectInterface
-	Deploy() DeployInterface
 }
 
-type shareDaoFactory struct {
-	db *gorm.DB
+type ProjectInterface interface {
+	Create(ctx context.Context, project models.Project) (id int, err error)
 }
 
-func NewDaoFactory(db *gorm.DB) ShareDaoFactory {
-	return &shareDaoFactory{
-		db: db,
+type project struct {
+	ComponentConfig config.Config
+	factory         db.ShareDaoFactory
+	redis           *redis.Client
+}
+
+func newProject(fx *fuxi) ProjectInterface {
+	return &project{
+		ComponentConfig: fx.cfg,
+		factory:         fx.factory,
+		redis:           fx.redis,
 	}
 }
 
-func (s *shareDaoFactory) User() UserInterface {
-	return NewUserFactory(s.db)
-}
-
-func (s *shareDaoFactory) Project() ProjectInterface {
-	return NewProjectFactory(s.db)
-}
-
-func (s *shareDaoFactory) Deploy() DeployInterface {
-	return NewDeployFactory(s.db)
+func (p *project) Create(ctx context.Context, project models.Project) (id int, err error) {
+	return p.factory.Project().Create(ctx, project)
 }

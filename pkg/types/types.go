@@ -31,3 +31,22 @@ const (
 	SuperUser   = 1
 	GeneralUser = 0
 )
+
+const (
+	GitRepoTypeDefault = "git"
+	GitRepoTypeSVN     = "svn"
+	GitRepoTypeFtp     = "ftp"
+	GitRepoTypeSftp    = "sftp"
+)
+const (
+	Deploying     = 1
+	DeploySuccess = 2
+	DeployFailed  = 3
+)
+
+const (
+	DeployNoticeWebHookWeChat   = 1
+	DeployNoticeWebHookDingTalk = 2
+	DeployNoticeWebHookFeiShu   = 3
+	DeployNoticeWebHookCustom   = 999
+)

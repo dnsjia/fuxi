@@ -27,32 +27,44 @@ SOFTWARE.
 
 package db
 
-import "gorm.io/gorm"
+import (
+	"context"
+	"github.com/dnsjia/fuxi/pkg/db/models"
 
-type ShareDaoFactory interface {
-	User() UserInterface
-	Project() ProjectInterface
-	Deploy() DeployInterface
+	"gorm.io/gorm"
+)
+
+type ProjectInterface interface {
+	Create(ctx context.Context, p models.Project) (id int, err error)
+	List(ctx context.Context) ([]*models.Project, error)
+	Get(ctx context.Context, id int) (*models.Project, error)
+	Delete(ctx context.Context, id int) error
 }
 
-type shareDaoFactory struct {
+type project struct {
 	db *gorm.DB
 }
 
-func NewDaoFactory(db *gorm.DB) ShareDaoFactory {
-	return &shareDaoFactory{
+func NewProjectFactory(db *gorm.DB) ProjectInterface {
+	return &project{
 		db: db,
 	}
 }
 
-func (s *shareDaoFactory) User() UserInterface {
-	return NewUserFactory(s.db)
+func (p *project) Create(ctx context.Context, project models.Project) (id int, err error) {
+	err = p.db.Model(&project).Create(&project).Error
+	return project.Id, err
+
 }
 
-func (s *shareDaoFactory) Project() ProjectInterface {
-	return NewProjectFactory(s.db)
+func (p *project) List(ctx context.Context) ([]*models.Project, error) {
+	return nil, nil
 }
 
-func (s *shareDaoFactory) Deploy() DeployInterface {
-	return NewDeployFactory(s.db)
+func (p *project) Get(ctx context.Context, id int) (*models.Project, error) {
+	return nil, nil
+}
+
+func (p *project) Delete(ctx context.Context, id int) error {
+	return nil
 }
