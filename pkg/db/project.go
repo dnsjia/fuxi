@@ -36,8 +36,8 @@ import (
 
 type ProjectInterface interface {
 	Create(ctx context.Context, p models.Project) (id int, err error)
-	List(ctx context.Context) ([]*models.Project, error)
-	Get(ctx context.Context, id int) (*models.Project, error)
+	List(ctx context.Context) (project []*models.Project, err error)
+	Get(ctx context.Context, id int) (project *models.Project, err error)
 	Delete(ctx context.Context, id int) error
 }
 
@@ -57,12 +57,20 @@ func (p *project) Create(ctx context.Context, project models.Project) (id int, e
 
 }
 
-func (p *project) List(ctx context.Context) ([]*models.Project, error) {
-	return nil, nil
+func (p *project) List(ctx context.Context) (project []*models.Project, err error) {
+	err = p.db.Model(&models.Project{}).Find(&project).Error
+	if err != nil {
+		return nil, err
+	}
+	return project, nil
 }
 
-func (p *project) Get(ctx context.Context, id int) (*models.Project, error) {
-	return nil, nil
+func (p *project) Get(ctx context.Context, id int) (project *models.Project, err error) {
+	err = p.db.Model(&models.Project{}).Where("id = ?", id).First(&project).Error
+	if err != nil {
+		return nil, err
+	}
+	return project, nil
 }
 
 func (p *project) Delete(ctx context.Context, id int) error {

@@ -34,8 +34,12 @@ import (
 )
 
 func ProjectRouter(engine *gin.Engine) {
-	users := engine.Group("/api/v1/project")
+	project := engine.Group("/api/v1/project")
 	{
-		users.POST("", controller.CreateProject)
+		project.POST("", controller.CreateProject)
+		project.GET("", controller.ListProject)
+		project.GET("/:projectId", controller.GetProject)
+		project.DELETE("/:projectId", controller.DeleteProject)
+
 	}
 }

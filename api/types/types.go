@@ -31,3 +31,7 @@ type User struct {
 	UserName string `json:"username"`
 	Password string `json:"password"`
 }
+
+type ProjectOptions struct {
+	ProjectId int `uri:"projectId" json:"projectId" binding:"required"`
+}
