@@ -29,30 +29,15 @@ package db
 
 import "gorm.io/gorm"
 
-type ShareDaoFactory interface {
-	User() UserInterface
-	Project() ProjectInterface
-	Deploy() DeployInterface
+type DeployInterface interface {
 }
 
-type shareDaoFactory struct {
+type deploy struct {
 	db *gorm.DB
 }
 
-func NewDaoFactory(db *gorm.DB) ShareDaoFactory {
-	return &shareDaoFactory{
+func NewDeployFactory(db *gorm.DB) ProjectInterface {
+	return &project{
 		db: db,
 	}
-}
-
-func (s *shareDaoFactory) User() UserInterface {
-	return NewUserFactory(s.db)
-}
-
-func (s *shareDaoFactory) Project() ProjectInterface {
-	return NewProjectFactory(s.db)
-}
-
-func (s *shareDaoFactory) Deploy() DeployInterface {
-	return NewDeployFactory(s.db)
 }

@@ -90,12 +90,13 @@ func Run(opts *options.Options) error {
 
 	fuxi.Setup(opts)
 
-	InitRouters(opts)
+	initRouters(opts)
 	opts.Run(ctx.Done())
 
 	select {}
 }
 
-func InitRouters(opts *options.Options) {
+func initRouters(opts *options.Options) {
 	routers.UserRouter(opts.GinEngine)
+	routers.ProjectRouter(opts.GinEngine)
 }

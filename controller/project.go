@@ -25,34 +25,27 @@ SOFTWARE.
 
 */
 
-package db
+package controller
 
-import "gorm.io/gorm"
+import (
+	"net/http"
 
-type ShareDaoFactory interface {
-	User() UserInterface
-	Project() ProjectInterface
-	Deploy() DeployInterface
-}
+	"github.com/gin-gonic/gin"
 
-type shareDaoFactory struct {
-	db *gorm.DB
-}
+	"github.com/dnsjia/fuxi/api/response"
+	"github.com/dnsjia/fuxi/pkg/db/models"
+	"github.com/dnsjia/fuxi/pkg/fuxi"
+)
 
-func NewDaoFactory(db *gorm.DB) ShareDaoFactory {
-	return &shareDaoFactory{
-		db: db,
+func CreateProject(c *gin.Context) {
+	var project models.Project
+	if err := response.CheckParams(c, &project); err != nil {
+		response.FailWithMessage(response.ParamError, response.ParamErrorMsg, c)
+		return
 	}
-}
 
-func (s *shareDaoFactory) User() UserInterface {
-	return NewUserFactory(s.db)
-}
-
-func (s *shareDaoFactory) Project() ProjectInterface {
-	return NewProjectFactory(s.db)
-}
-
-func (s *shareDaoFactory) Deploy() DeployInterface {
-	return NewDeployFactory(s.db)
+	if _, err := fuxi.CoreV1.Project().Create(c.Request.Context(), project); err != nil {
+		response.FailWithMessage(http.StatusOK, err.Error(), c)
+		return
+	}
 }

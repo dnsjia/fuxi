@@ -36,6 +36,8 @@ import (
 
 type CoreV1Interface interface {
 	UserGetter
+	ProjectGetter
+	DeployGetter
 }
 
 type fuxi struct {
@@ -54,4 +56,12 @@ func New(cfg config.Config, factory db.ShareDaoFactory, r *redis.Client) CoreV1I
 
 func (fx *fuxi) User() UserInterface {
 	return newUser(fx)
+}
+
+func (fx *fuxi) Project() ProjectInterface {
+	return newProject(fx)
+}
+
+func (fx *fuxi) Deploy() DeployInterface {
+	return newDeploy(fx)
 }

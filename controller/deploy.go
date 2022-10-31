@@ -25,34 +25,4 @@ SOFTWARE.
 
 */
 
-package db
-
-import "gorm.io/gorm"
-
-type ShareDaoFactory interface {
-	User() UserInterface
-	Project() ProjectInterface
-	Deploy() DeployInterface
-}
-
-type shareDaoFactory struct {
-	db *gorm.DB
-}
-
-func NewDaoFactory(db *gorm.DB) ShareDaoFactory {
-	return &shareDaoFactory{
-		db: db,
-	}
-}
-
-func (s *shareDaoFactory) User() UserInterface {
-	return NewUserFactory(s.db)
-}
-
-func (s *shareDaoFactory) Project() ProjectInterface {
-	return NewProjectFactory(s.db)
-}
-
-func (s *shareDaoFactory) Deploy() DeployInterface {
-	return NewDeployFactory(s.db)
-}
+package controller
