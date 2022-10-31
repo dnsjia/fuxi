@@ -43,6 +43,9 @@ type ProjectGetter interface {
 
 type ProjectInterface interface {
 	Create(ctx context.Context, project models.Project) (id int, err error)
+	List(ctx context.Context) (project []*models.Project, err error)
+	Delete(ctx context.Context, id int) error
+	Get(ctx context.Context, id int) (project *models.Project, err error)
 }
 
 type project struct {
@@ -61,4 +64,16 @@ func newProject(fx *fuxi) ProjectInterface {
 
 func (p *project) Create(ctx context.Context, project models.Project) (id int, err error) {
 	return p.factory.Project().Create(ctx, project)
+}
+
+func (p *project) List(ctx context.Context) (project []*models.Project, err error) {
+	return p.factory.Project().List(ctx)
+}
+
+func (p *project) Delete(ctx context.Context, id int) error {
+	return p.factory.Project().Delete(ctx, id)
+}
+
+func (p *project) Get(ctx context.Context, id int) (project *models.Project, err error) {
+	return p.factory.Project().Get(ctx, id)
 }
