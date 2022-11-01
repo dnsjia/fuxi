@@ -25,22 +25,30 @@ SOFTWARE.
 
 */
 
-package types
+package controller
 
-type User struct {
-	UserName string `json:"username"`
-	Password string `json:"password"`
-}
+import (
+	"net/http"
 
-type ProjectOptions struct {
-	ProjectId int `uri:"projectId" json:"projectId" binding:"required"`
-}
+	"github.com/gin-gonic/gin"
 
-type ProjectRequest struct {
-	ProjectId int `json:"projectId"`
-}
+	"github.com/dnsjia/fuxi/api/response"
+	"github.com/dnsjia/fuxi/api/types"
+	"github.com/dnsjia/fuxi/pkg/fuxi"
+)
 
-type PingRepoRequest struct {
-	URL  string `form:"url" validate:"required"`
-	Type string `form:"type" validate:"required"`
+func PingRepo(c *gin.Context) {
+	var req types.PingRepoRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		response.FailWithMessage(response.ParamError, response.ParamErrorMsg, c)
+		return
+	}
+
+	if err := fuxi.CoreV1.Project().Ping(c.Request.Context(), req); err != nil {
+		response.FailWithMessage(http.StatusOK, err.Error(), c)
+		return
+	}
+
+	response.Ok(c)
+
 }

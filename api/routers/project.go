@@ -40,6 +40,6 @@ func ProjectRouter(engine *gin.Engine) {
 		project.GET("", controller.ListProject)
 		project.GET("/:projectId", controller.GetProject)
 		project.DELETE("", controller.DeleteProject)
-
+		project.GET("/repo/ping", controller.PingRepo)
 	}
 }
