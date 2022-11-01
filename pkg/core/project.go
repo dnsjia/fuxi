@@ -29,12 +29,18 @@ package core
 
 import (
 	"context"
+	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/go-redis/redis/v8"
 
+	"github.com/dnsjia/fuxi/api/types"
 	"github.com/dnsjia/fuxi/cmd/app/config"
 	"github.com/dnsjia/fuxi/pkg/db"
 	"github.com/dnsjia/fuxi/pkg/db/models"
+	fxtypes "github.com/dnsjia/fuxi/pkg/types"
+	"github.com/dnsjia/fuxi/pkg/utils"
 )
 
 type ProjectGetter interface {
@@ -46,6 +52,7 @@ type ProjectInterface interface {
 	List(ctx context.Context) (project []*models.Project, err error)
 	Delete(ctx context.Context, id int) error
 	Get(ctx context.Context, id int) (project *models.Project, err error)
+	Ping(ctx context.Context, request types.PingRepoRequest) error
 }
 
 type project struct {
@@ -76,4 +83,23 @@ func (p *project) Delete(ctx context.Context, id int) error {
 
 func (p *project) Get(ctx context.Context, id int) (project *models.Project, err error) {
 	return p.factory.Project().Get(ctx, id)
+}
+
+func (p *project) Ping(ctx context.Context, request types.PingRepoRequest) error {
+	protocol := strings.Split(request.URL, "://")[0]
+	if protocol == fxtypes.RepoProtocolSSH {
+		return errors.New("the ssh protocol is not supported")
+	}
+
+	var git utils.Git
+	switch request.Type {
+	case "git":
+		return git.List(request.URL)
+	case "svn":
+	default:
+		return fmt.Errorf("unsupported repository")
+	}
+
+	return nil
+
 }

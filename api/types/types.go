@@ -35,3 +35,12 @@ type User struct {
 type ProjectOptions struct {
 	ProjectId int `uri:"projectId" json:"projectId" binding:"required"`
 }
+
+type ProjectRequest struct {
+	ProjectId int `json:"projectId"`
+}
+
+type PingRepoRequest struct {
+	URL  string `form:"url" validate:"required"`
+	Type string `form:"type" validate:"required"`
+}

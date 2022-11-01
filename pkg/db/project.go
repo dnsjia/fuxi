@@ -29,9 +29,10 @@ package db
 
 import (
 	"context"
-	"github.com/dnsjia/fuxi/pkg/db/models"
 
 	"gorm.io/gorm"
+
+	"github.com/dnsjia/fuxi/pkg/db/models"
 )
 
 type ProjectInterface interface {
@@ -74,5 +75,5 @@ func (p *project) Get(ctx context.Context, id int) (project *models.Project, err
 }
 
 func (p *project) Delete(ctx context.Context, id int) error {
-	return nil
+	return p.db.Model(&models.Project{}).Where("id = ?", id).Delete(&models.Project{}).Error
 }

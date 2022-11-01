@@ -50,3 +50,8 @@ const (
 	DeployNoticeWebHookFeiShu   = 3
 	DeployNoticeWebHookCustom   = 999
 )
+
+const (
+	RepoProtocolSSH  = "ssh"
+	RepoProtocolHTTP = "http"
+)

@@ -32,10 +32,15 @@ import (
 	"os"
 
 	"gorm.io/gorm"
+
+	"github.com/dnsjia/fuxi/pkg/db/models"
 )
 
 func InitMysqlTables(db *gorm.DB) {
-	err := db.AutoMigrate()
+	err := db.AutoMigrate(
+		models.User{},
+		models.Project{},
+	)
 	if err != nil {
 		fmt.Println("Failed to initialize the table. Procedure", err)
 		os.Exit(-1)
