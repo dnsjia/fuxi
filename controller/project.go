@@ -81,13 +81,13 @@ func GetProject(c *gin.Context) {
 }
 
 func DeleteProject(c *gin.Context) {
-	var projectOptions types.ProjectOptions
-	if err := c.ShouldBindUri(&projectOptions); err != nil {
+	var req types.ProjectRequest
+	if err := response.CheckParams(c, &req); err != nil {
 		response.FailWithMessage(response.ParamError, response.ParamErrorMsg, c)
 		return
 	}
 
-	if err := fuxi.CoreV1.Project().Delete(c.Request.Context(), projectOptions.ProjectId); err != nil {
+	if err := fuxi.CoreV1.Project().Delete(c.Request.Context(), req.ProjectId); err != nil {
 		response.FailWithMessage(http.StatusOK, err.Error(), c)
 		return
 	}

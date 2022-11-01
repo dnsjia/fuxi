@@ -39,7 +39,7 @@ func ProjectRouter(engine *gin.Engine) {
 		project.POST("", controller.CreateProject)
 		project.GET("", controller.ListProject)
 		project.GET("/:projectId", controller.GetProject)
-		project.DELETE("/:projectId", controller.DeleteProject)
+		project.DELETE("", controller.DeleteProject)
 
 	}
 }

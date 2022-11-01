@@ -35,3 +35,7 @@ type User struct {
 type ProjectOptions struct {
 	ProjectId int `uri:"projectId" json:"projectId" binding:"required"`
 }
+
+type ProjectRequest struct {
+	ProjectId int `json:"projectId"`
+}

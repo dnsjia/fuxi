@@ -27,7 +27,12 @@ SOFTWARE.
 
 package models
 
-import "time"
+import (
+	"fmt"
+	"time"
+
+	"database/sql/driver"
+)
 
 const (
 	SecLocalTimeFormat  = "2006-01-02 15:04:05"
@@ -47,4 +52,38 @@ func (f *FuXiModel) TableName(name string) string {
 
 type LocalTime struct {
 	time.Time
+}
+
+func (t *LocalTime) UnmarshalJSON(data []byte) (err error) {
+	if len(data) == 2 {
+		*t = LocalTime{Time: time.Time{}}
+		return
+	}
+
+	// 指定解析的格式
+	now, err := time.Parse(`"`+SecLocalTimeFormat+`"`, string(data))
+	*t = LocalTime{Time: now}
+	return
+}
+
+func (t LocalTime) MarshalJSON() ([]byte, error) {
+	output := fmt.Sprintf("\"%s\"", t.Format(SecLocalTimeFormat))
+	return []byte(output), nil
+}
+
+func (t LocalTime) Value() (driver.Value, error) {
+	var zeroTime time.Time
+	if t.UnixNano() == zeroTime.UnixNano() {
+		return nil, nil
+	}
+	return t.Time, nil
+}
+
+func (t *LocalTime) Scan(v interface{}) error {
+	value, ok := v.(time.Time)
+	if ok {
+		*t = LocalTime{Time: value}
+		return nil
+	}
+	return fmt.Errorf("can not convert %v to LocalTime", v)
 }
