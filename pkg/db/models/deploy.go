@@ -25,22 +25,19 @@ SOFTWARE.
 
 */
 
-package controller
+package models
 
-import "github.com/gin-gonic/gin"
-
-func CreateDeploy(c *gin.Context) {
-
+type DeployHistory struct {
+	FuXiModel
+	TaskId      string `gorm:"comment:任务ID" json:"taskId,omitempty"`
+	ProjectId   int    `gorm:"comment:项目ID" json:"projectId"`
+	ProjectName string `gorm:"comment:项目名称" json:"projectName"`
+	Status      int    `gorm:"comment:部署状态" json:"status"`
+	DeployUser  string `gorm:"comment:操作用户" json:"deployUser"`
+	Detail      string `gorm:"comment:部署信息" gorm:"type:text" json:"detail"`
+	Extension   string `gorm:"comment:扩展信息" gorm:"type:text" json:"extension"`
 }
 
-func ListDeploy(c *gin.Context) {
-
-}
-
-func GetDeploy(c *gin.Context) {
-
-}
-
-func DeleteDeploy(c *gin.Context) {
-
+func (d DeployHistory) TableName() string {
+	return "deploy_history"
 }

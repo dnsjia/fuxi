@@ -25,22 +25,20 @@ SOFTWARE.
 
 */
 
-package controller
+package models
 
-import "github.com/gin-gonic/gin"
-
-func CreateDeploy(c *gin.Context) {
-
+type Server struct {
+	FuXiModel `json:"fuXiModel"`
+	Name      string `gorm:"comment:主机名称" json:"name" json:"name"`
+	Ip        string `gorm:"comment:主机IP" json:"ip,omitempty"`
+	Port      int    `gorm:"comment:端口" json:"port"`
+	UserName  string `gorm:"comment:登陆用户" json:"username"`
+	Password  string `gorm:"comment:登陆密码" json:"password"`
+	Os        string `gorm:"comment:操作系统" json:"os"`
+	OsType    string `gorm:"comment:操作系统版本" json:"osType"`
+	Desc      string `gorm:"comment:描述" gorm:"type:text" json:"desc"`
 }
 
-func ListDeploy(c *gin.Context) {
-
-}
-
-func GetDeploy(c *gin.Context) {
-
-}
-
-func DeleteDeploy(c *gin.Context) {
-
+func (s Server) TableName() string {
+	return "servers"
 }

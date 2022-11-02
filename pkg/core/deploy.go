@@ -28,10 +28,13 @@ SOFTWARE.
 package core
 
 import (
+	"context"
+
 	"github.com/go-redis/redis/v8"
 
 	"github.com/dnsjia/fuxi/cmd/app/config"
 	"github.com/dnsjia/fuxi/pkg/db"
+	"github.com/dnsjia/fuxi/pkg/db/models"
 )
 
 type DeployGetter interface {
@@ -39,6 +42,10 @@ type DeployGetter interface {
 }
 
 type DeployInterface interface {
+	Get(ctx context.Context, taskId string) (deploy *models.DeployHistory, err error)
+	List(ctx context.Context) (deploy []*models.DeployHistory, err error)
+	Create(ctx context.Context, deploy *models.DeployHistory) error
+	Updates(ctx context.Context, taskId string, deploy models.DeployHistory) error
 }
 
 type deploy struct {
@@ -53,4 +60,20 @@ func newDeploy(fx *fuxi) DeployInterface {
 		factory:         fx.factory,
 		redis:           fx.redis,
 	}
+}
+
+func (d *deploy) Get(ctx context.Context, taskId string) (deploy *models.DeployHistory, err error) {
+	return d.factory.Deploy().Get(ctx, taskId)
+}
+
+func (d *deploy) List(ctx context.Context) (deploy []*models.DeployHistory, err error) {
+	return d.factory.Deploy().List(ctx)
+}
+
+func (d *deploy) Create(ctx context.Context, deploy *models.DeployHistory) error {
+	return d.factory.Deploy().Create(ctx, deploy)
+}
+
+func (d *deploy) Updates(ctx context.Context, taskId string, deploy models.DeployHistory) error {
+	return d.factory.Deploy().Updates(ctx, taskId, deploy)
 }

@@ -25,22 +25,18 @@ SOFTWARE.
 
 */
 
-package controller
+package models
 
-import "github.com/gin-gonic/gin"
-
-func CreateDeploy(c *gin.Context) {
-
+type Crontab struct {
+	FuXiModel
+	ServerId   int    `gorm:"comment:机器" json:"serverId"`
+	Expression string `gorm:"comment:任务表达式" json:"expression"`
+	Command    string `gorm:"comment:命令" json:"command"`
+	LogLevel   uint8  `gorm:"comment:日志级别" json:"logLevel"`
+	Desc       string `gorm:"comment:描述" gorm:"type:text" json:"desc"`
+	Status     uint8  `gorm:"comment:任务状态" json:"status"`
 }
 
-func ListDeploy(c *gin.Context) {
-
-}
-
-func GetDeploy(c *gin.Context) {
-
-}
-
-func DeleteDeploy(c *gin.Context) {
-
+func (c Crontab) TableName() string {
+	return "crontab"
 }

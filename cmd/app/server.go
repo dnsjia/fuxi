@@ -99,4 +99,5 @@ func Run(opts *options.Options) error {
 func initRouters(opts *options.Options) {
 	routers.UserRouter(opts.GinEngine)
 	routers.ProjectRouter(opts.GinEngine)
+	routers.DeployRouter(opts.GinEngine)
 }
