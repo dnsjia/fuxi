@@ -30,7 +30,7 @@ package models
 type Project struct {
 	FuXiModel
 	UserId                 int64  `gorm:"comment:用户ID" json:"userId"`
-	AppName                string `gorm:"comment:应用名称" json:"appName"`
+	ProjectName            string `gorm:"comment:应用名称" json:"projectName"`
 	GitRepo                string `gorm:"comment:仓库地址" json:"gitRepo"`
 	GitRepoType            uint8  `gorm:"comment:仓库类型" json:"gitRepoType"`
 	GitBranch              string `gorm:"comment:仓库分支" json:"gitBranch"`

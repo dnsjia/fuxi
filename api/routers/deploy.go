@@ -25,22 +25,20 @@ SOFTWARE.
 
 */
 
-package controller
+package routers
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
 
-func CreateDeploy(c *gin.Context) {
+	"github.com/dnsjia/fuxi/controller"
+)
 
-}
-
-func ListDeploy(c *gin.Context) {
-
-}
-
-func GetDeploy(c *gin.Context) {
-
-}
-
-func DeleteDeploy(c *gin.Context) {
-
+func DeployRouter(engine *gin.Engine) {
+	deploy := engine.Group("/api/v1/deploy")
+	{
+		deploy.POST("/vm", controller.CreateDeploy)
+		deploy.GET("/vm", controller.ListDeploy)
+		deploy.GET("/vm/:taskId", controller.GetDeploy)
+		deploy.DELETE("/vm/:taskId", controller.DeleteDeploy)
+	}
 }

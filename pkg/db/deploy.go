@@ -27,17 +27,51 @@ SOFTWARE.
 
 package db
 
-import "gorm.io/gorm"
+import (
+	"context"
+
+	"gorm.io/gorm"
+
+	"github.com/dnsjia/fuxi/pkg/db/models"
+)
 
 type DeployInterface interface {
+	Get(ctx context.Context, taskId string) (deploy *models.DeployHistory, err error)
+	List(ctx context.Context) (deploy []*models.DeployHistory, err error)
+	Create(ctx context.Context, deploy *models.DeployHistory) error
+	Updates(ctx context.Context, taskId string, deploy models.DeployHistory) error
 }
 
 type deploy struct {
 	db *gorm.DB
 }
 
-func NewDeployFactory(db *gorm.DB) ProjectInterface {
-	return &project{
+func NewDeployFactory(db *gorm.DB) DeployInterface {
+	return &deploy{
 		db: db,
 	}
+}
+
+func (d *deploy) Get(ctx context.Context, taskId string) (deploy *models.DeployHistory, err error) {
+	err = d.db.Model(&models.DeployHistory{}).Where("task_id = ?", taskId).First(deploy).Error
+	if err != nil {
+		return nil, err
+	}
+	return deploy, nil
+}
+
+func (d *deploy) List(ctx context.Context) (deploy []*models.DeployHistory, err error) {
+	err = d.db.Model(&models.DeployHistory{}).Find(&deploy).Error
+	if err != nil {
+		return nil, err
+	}
+	return deploy, nil
+}
+
+func (d *deploy) Create(ctx context.Context, deploy *models.DeployHistory) error {
+	return d.db.Model(&models.DeployHistory{}).Create(&deploy).Error
+}
+
+func (d *deploy) Updates(ctx context.Context, taskId string, deploy models.DeployHistory) error {
+	return d.db.Model(&models.DeployHistory{}).Where("task_id = ?", taskId).Updates(deploy).Error
 }
